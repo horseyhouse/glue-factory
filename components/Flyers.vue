@@ -43,8 +43,6 @@ ul {
 
 li {
     flex: 1;
-    padding: 1rem;
-    border: 1px solid #ccc;
 }
 
 figure {
@@ -52,11 +50,14 @@ figure {
     flex-direction: column;
     gap: 0.5rem;
     min-width: 11rem;
+    border: 1px solid #ccc;
+    padding: 1rem;
 }
 
 img {
     width: 100%;
     height: auto;
+    border: 1px solid #ccc;
 }
 
 caption {
