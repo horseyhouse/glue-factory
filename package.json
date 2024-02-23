@@ -1,0 +1,26 @@
+{
+  "name": "glue-factory",
+  "version": "1.0.0",
+  "description": "The Glue Factory",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/horseyhouse/glue-factory.git"
+  },
+  "author": "Horse",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/horseyhouse/glue-factory/issues"
+  },
+  "homepage": "https://github.com/horseyhouse/glue-factory#readme",
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.1.4"
+  }
+}
