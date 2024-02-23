@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const paths = Object.keys(import.meta.glob("/media/flyers/*"));
+import { reactive } from 'vue'
+
+const paths = import.meta.glob("/media/flyers/*");
 
 function pathToDate(path: string): Date {
     // Regex that extracts the filename from the path, without extension
@@ -8,7 +10,7 @@ function pathToDate(path: string): Date {
     return new Date(filename)
 }
 
-const pathsAndDates = paths
+const pathsAndDates = Object.keys(paths)
     // Compute a date for each path
     .map((path: string) => ({
         path,
@@ -16,6 +18,13 @@ const pathsAndDates = paths
     }))
     // Sort by the date
     .sort((a, b) => b.date.getTime() - a.date.getTime())
+
+// Resolved paths
+const resolvedPaths = reactive({})
+pathsAndDates.forEach(({ path }) => {
+    paths[path]().then(
+        module => resolvedPaths[path] = module.default)
+})
 </script>
 
 <template>
@@ -27,7 +36,7 @@ const pathsAndDates = paths
                         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
                     }) }}
                 </caption>
-                <img :src="path">
+                <img :src="resolvedPaths[path]">
             </figure>
         </li>
     </ul>
