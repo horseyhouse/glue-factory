@@ -32,8 +32,8 @@ pathsAndDates.forEach(({ path }) => {
         <li v-for="{ path, date } of pathsAndDates">
             <figure>
                 <caption>
-                    {{ date.toLocaleDateString(undefined, {
-                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                    {{ date.toLocaleString(undefined, {
+                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC'
                     }) }}
                 </caption>
                 <img :src="resolvedPaths[path]">
