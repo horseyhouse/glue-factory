@@ -1,76 +1,78 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive } from "vue";
 
 const paths = import.meta.glob("/media/flyers/*");
 
 function pathToDate(path: string): Date {
     // Regex that extracts the filename from the path, without extension
-    const filename = path.replace(/^.*[\\\/]/, '').split('.').slice(0, -1).join('.')
+    const filename = path
+        .replace(/^.*[\\\/]/, "")
+        .split(".")
+        .slice(0, -1)
+        .join(".");
 
-    return new Date(filename)
+    return new Date(filename);
 }
 
 const pathsAndDates = Object.keys(paths)
     // Compute a date for each path
     .map((path: string) => ({
         path,
-        date: pathToDate(path)
+        date: pathToDate(path),
     }))
     // Sort by the date
-    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
 
 // Resolved paths
-const resolvedPaths = reactive({})
+const resolvedPaths = reactive({});
 pathsAndDates.forEach(({ path }) => {
-    paths[path]().then(
-        module => resolvedPaths[path] = module.default)
-})
+    paths[path]().then((module) => (resolvedPaths[path] = module.default));
+});
 </script>
 
 <template>
-    <ul>
+    <ul class="flyers">
         <li v-for="{ path, date } of pathsAndDates">
             <figure>
                 <caption>
-                    {{ date.toLocaleString(undefined, {
-                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC'
-                    }) }}
+                    {{
+                        date.toLocaleString(undefined, {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            timeZone: "UTC",
+                        })
+                    }}
                 </caption>
-                <img :src="resolvedPaths[path]">
+                <img :src="resolvedPaths[path]" />
             </figure>
         </li>
     </ul>
 </template>
 
 <style>
-ul {
+ul.flyers {
     list-style: none;
     display: flex;
-    gap: 1rem;
     flex-wrap: wrap;
-}
+    justify-content: center;
+    align-items: stretch;
+    gap: 2rem;
 
-li {
-    flex: 1;
-}
+    figure {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-width: 10rem;
+        max-width: 15rem;
+        height: 100%;
+    }
 
-figure {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    min-width: 11rem;
-    border: 1px solid #ccc;
-    padding: 1rem;
-}
-
-img {
-    width: 100%;
-    height: auto;
-    border: 1px solid #ccc;
-}
-
-caption {
-    text-align: center;
-    width: 100%;
+    img {
+        width: 100%;
+        height: auto;
+        box-shadow: 0 0 0.5rem black;
+    }
 }
 </style>
