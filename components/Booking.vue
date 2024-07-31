@@ -35,7 +35,7 @@
             Let us know if you will make a flyer or would like us to make one.
         </li>
         <li>Our capacity is 80.</li>
-        <li>Free water and earplugs.</li>
+        <li>Free water, earplugs, and narcan.</li>
         <li>Not wheelchair accessible at this time, sorry! :(</li>
     </ul>
 </template>
