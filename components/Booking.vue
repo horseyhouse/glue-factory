@@ -28,13 +28,15 @@
             We currently do not have a backline or PA system, bands bring their
             own. However we are planning on getting a PA ~soon~.
         </li>
-        <li>Our capacity is 80.</li>
         <li>
             Let us know if you need connects to local acts to fill out the set.
         </li>
         <li>
             Let us know if you will make a flyer or would like us to make one.
         </li>
+        <li>Our capacity is 80.</li>
+        <li>Free water and earplugs.</li>
+        <li>Not wheelchair accessible at this time, sorry! :(</li>
     </ul>
 </template>
 
