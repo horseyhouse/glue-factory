@@ -72,7 +72,7 @@ ul.flyers {
     img {
         width: 100%;
         height: auto;
-        box-shadow: 0 0 0.5rem black;
+        box-shadow: 0 0 0.7rem pink;
     }
 }
 </style>
