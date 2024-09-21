@@ -24,9 +24,18 @@ const pathsAndDates = Object.keys(paths)
     .sort((a, b) => b.date.getTime() - a.date.getTime());
 
 // Resolved paths
-const resolvedPaths = reactive({});
+const resolvedPaths = reactive(new Map<string, string>());
 pathsAndDates.forEach(({ path }) => {
-    paths[path]().then((module) => (resolvedPaths[path] = module.default));
+    paths[path]().then((module) => {
+        if (
+            module &&
+            typeof module === "object" &&
+            "default" in module &&
+            typeof module.default === "string"
+        ) {
+            resolvedPaths.set(path, module.default);
+        }
+    });
 });
 </script>
 
@@ -34,7 +43,7 @@ pathsAndDates.forEach(({ path }) => {
     <ul class="flyers">
         <li v-for="{ path, date } of pathsAndDates">
             <figure>
-                <caption>
+                <figcaption>
                     {{
                         date.toLocaleString(undefined, {
                             weekday: "long",
@@ -44,8 +53,8 @@ pathsAndDates.forEach(({ path }) => {
                             timeZone: "UTC",
                         })
                     }}
-                </caption>
-                <img :src="resolvedPaths[path]" />
+                </figcaption>
+                <img :src="resolvedPaths.get(path)" />
             </figure>
         </li>
     </ul>
