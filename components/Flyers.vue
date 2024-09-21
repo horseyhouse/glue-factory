@@ -64,9 +64,9 @@ ul.flyers {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        min-width: 10rem;
         max-width: 15rem;
         height: 100%;
+        width: 100%;
     }
 
     img {
