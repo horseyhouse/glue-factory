@@ -24,10 +24,10 @@
             All ticket sales go to bands at whatever "suggested donation" you
             set. Any donations or tips to the bar go to the house.
         </li>
-        <li>
+        <!--<li>
             We currently do not have a backline or PA system, bands bring their
             own. However we are planning on getting a PA ~soon~.
-        </li>
+        </li> -->
         <li>
             Let us know if you need connects to local acts to fill out the set.
         </li>
