@@ -249,15 +249,31 @@ const flyersSorted = computed(() =>
                         <td v-html="flyer.value.content"></td>
                         <td>{{ (flyer.value.attachment as any)[0].alt }}</td>
                         <td>
-                            <button
-                                @click="startEditingFlyer(flyer)"
-                                title="Edit"
-                            >
-                                ✏️
-                            </button>
-                            <button @click="deleteFlyer(flyer)" title="Delete">
-                                🗑️
-                            </button>
+                            <ul>
+                                <li>
+                                    <a
+                                        :href="graffiti.objectToUrl(flyer)"
+                                        title="View"
+                                        >🔗</a
+                                    >
+                                </li>
+                                <li>
+                                    <button
+                                        @click="startEditingFlyer(flyer)"
+                                        title="Edit"
+                                    >
+                                        ✏️
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        @click="deleteFlyer(flyer)"
+                                        title="Delete"
+                                    >
+                                        🗑️
+                                    </button>
+                                </li>
+                            </ul>
                         </td>
                     </tr>
                 </tbody>
@@ -298,14 +314,11 @@ table {
     border-collapse: collapse;
 }
 
-td,
-th {
+td {
     padding: 0.5em;
     white-space: pre-wrap;
-}
-
-td {
     border: 1px solid #555;
+    vertical-align: top;
 }
 
 td img {
@@ -327,5 +340,38 @@ tr:nth-child(even) {
 }
 .alt-col {
     width: 30%;
+}
+
+td ul {
+    white-space: nowrap;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    align-items: center;
+    justify-items: center;
+}
+
+td ul li {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+td :is(button, a) {
+    font-size: 0.8em;
+    padding: 0.5rem;
+    border: 1px solid #555;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+td :is(button, a):hover {
+    background-color: #555;
+    text-decoration: none;
 }
 </style>
