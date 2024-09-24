@@ -206,12 +206,12 @@ const flyersSorted = computed(() =>
                         v-model="imageUrl"
                     />
                     <label for="alt">Alt text</label>
-                    <input
+                    <textarea
                         type="text"
                         id="alt"
                         placeholder="A really cool band flyer..."
                         v-model="alt"
-                    />
+                    ></textarea>
 
                     <input type="submit" value="Submit Flyer" />
                 </fieldset>
@@ -305,7 +305,7 @@ fieldset {
     flex-direction: column;
 }
 
-:is(label, input) + :is(input, textarea) {
+:is(label, input) + :is(input:not([type="submit"]), textarea) {
     margin-bottom: 1rem;
 }
 
@@ -359,8 +359,16 @@ td ul li {
     align-items: center;
 }
 
-td :is(button, a) {
-    font-size: 0.8em;
+:is(input, textarea) {
+    font-size: 1em;
+    padding: 0.5rem;
+    border: 1px solid #555;
+    background-color: #222;
+    font-family: inherit;
+    color: white;
+}
+
+:is(button, a, input[type="submit"]) {
     padding: 0.5rem;
     border: 1px solid #555;
     background: none;
@@ -368,9 +376,11 @@ td :is(button, a) {
     display: flex;
     justify-content: center;
     align-items: center;
+    color: inherit;
+    font-family: inherit;
 }
 
-td :is(button, a):hover {
+:is(button, a, input[type="submit"]):hover {
     background-color: #555;
     text-decoration: none;
 }
