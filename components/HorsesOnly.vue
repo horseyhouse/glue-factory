@@ -368,7 +368,7 @@ td ul li {
     color: white;
 }
 
-:is(button, a, input[type="submit"]) {
+.admin :is(button, a, input[type="submit"]) {
     padding: 0.5rem;
     border: 1px solid #555;
     background: none;
@@ -380,7 +380,7 @@ td ul li {
     font-family: inherit;
 }
 
-:is(button, a, input[type="submit"]):hover {
+.admin :is(button, a, input[type="submit"]):hover {
     background-color: #555;
     text-decoration: none;
 }
