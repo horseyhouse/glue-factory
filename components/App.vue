@@ -13,6 +13,9 @@
     <main>
         <RouterView />
     </main>
+    <footer>
+        <RouterLink to="/horse"> 🐴 </RouterLink>
+    </footer>
 </template>
 
 <style>

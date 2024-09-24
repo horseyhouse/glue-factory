@@ -4,6 +4,7 @@ import "./style.css";
 import App from "./components/App.vue";
 import Flyers from "./components/Flyers.vue";
 import Booking from "./components/Booking.vue";
+import HorsesOnly from "./components/HorsesOnly.vue";
 
 const redirect = sessionStorage.redirect;
 delete sessionStorage.redirect;
@@ -14,6 +15,7 @@ if (redirect && redirect !== location.href) {
 const routes = [
   { path: "/", component: Flyers },
   { path: "/booking", component: Booking },
+  { path: "/horse", component: HorsesOnly },
 ];
 const router = createRouter({
   history: createWebHistory(),
