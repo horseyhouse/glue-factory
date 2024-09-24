@@ -6,6 +6,8 @@ import {
     useGraffitiSession,
     registerSolidSession,
     GraffitiIdentityProviderLogin,
+    type GraffitiObjectTyped,
+    type GraffitiLocalObjectTyped,
 } from "@graffiti-garden/client-vue";
 import "@graffiti-garden/client-vue/dist/style.css";
 
@@ -30,6 +32,7 @@ const flyerSchema = {
                 },
                 attachment: {
                     type: "array",
+                    minItems: 1,
                     items: {
                         type: "object",
                         required: ["type", "url", "alt"],
@@ -88,28 +91,63 @@ async function putFlyer() {
             "Please provide an alt text horsie, not all horsies can see images",
         );
     }
-    graffiti.put<typeof flyerSchema>(
-        {
-            value: {
-                startTime: startTime.value,
-                content: content.value,
-                location: "ask a horse",
-                attachment: [
-                    {
-                        type: "Image",
-                        url: imageUrl.value,
-                        alt: alt.value,
-                    },
-                ],
-            },
-            channels: [channel],
+
+    const object = {
+        value: {
+            startTime: startTime.value,
+            content: content.value,
+            location: "ask a horse",
+            attachment: [
+                {
+                    type: "Image",
+                    url: imageUrl.value,
+                    alt: alt.value,
+                },
+            ],
         },
-        session.value,
-    );
+        channels: [channel],
+    } satisfies GraffitiLocalObjectTyped<typeof flyerSchema>;
+
+    if (editingUrl.value) {
+        await graffiti.put<typeof flyerSchema>(
+            object,
+            editingUrl.value,
+            session.value,
+        );
+    } else {
+        await graffiti.put<typeof flyerSchema>(object, session.value);
+    }
     startTime.value = "";
     content.value = "";
     imageUrl.value = "";
     alt.value = "";
+    editingUrl.value = null;
+}
+
+function deleteFlyer(flyer: GraffitiObjectTyped<typeof flyerSchema>) {
+    if (!session.value.webId) {
+        return alert("You must be logged in horsie");
+    }
+    if (
+        !confirm(
+            "Are you sure you want to delete this flyer horsie? It will be gone forever",
+        )
+    ) {
+        return;
+    }
+    graffiti.delete(flyer, session.value);
+}
+
+const editingUrl = ref<string | null>(null);
+function startEditingFlyer(flyer: GraffitiObjectTyped<typeof flyerSchema>) {
+    startTime.value = flyer.value.startTime;
+    content.value = flyer.value.content;
+    imageUrl.value = (flyer.value.attachment as any)[0].url;
+    alt.value = (flyer.value.attachment as any)[0].alt;
+    editingUrl.value = graffiti.objectToUrl(flyer);
+    document.getElementById("flyer-editor-form")?.scrollIntoView({
+        behavior: "smooth",
+    });
 }
 
 const { results: flyers } = useDiscover([channel], flyerSchema);
@@ -131,9 +169,23 @@ const flyersSorted = computed(() =>
         />
 
         <template v-if="session.webId">
-            <form @submit.prevent="putFlyer">
+            <form @submit.prevent="putFlyer" id="flyer-editor-form">
                 <fieldset>
-                    <legend>Submit a new flyer</legend>
+                    <legend>Flyer Editor</legend>
+
+                    <template v-if="editingUrl">
+                        <label for="editing-url">Editing flyer with URL</label>
+                        <input
+                            id="editing-url"
+                            type="text"
+                            readonly
+                            v-model="editingUrl"
+                        />
+                        <button @click="editingUrl = null">
+                            Cancel editing
+                        </button>
+                    </template>
+
                     <label for="start-time">Doors @</label>
                     <input
                         type="datetime-local"
@@ -160,7 +212,8 @@ const flyersSorted = computed(() =>
                         placeholder="A really cool band flyer..."
                         v-model="alt"
                     />
-                    <input type="submit" value="Submit a new flyer" />
+
+                    <input type="submit" value="Submit Flyer" />
                 </fieldset>
             </form>
 
@@ -174,6 +227,7 @@ const flyersSorted = computed(() =>
                         <th scope="col" class="start-time-col">Start Time</th>
                         <th scope="col" class="content-col">Content</th>
                         <th scope="col" class="alt-col">Alt Text</th>
+                        <th scope="col" class="controls-col">Controls</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -194,6 +248,17 @@ const flyersSorted = computed(() =>
                         </td>
                         <td v-html="flyer.value.content"></td>
                         <td>{{ (flyer.value.attachment as any)[0].alt }}</td>
+                        <td>
+                            <button
+                                @click="startEditingFlyer(flyer)"
+                                title="Edit"
+                            >
+                                ✏️
+                            </button>
+                            <button @click="deleteFlyer(flyer)" title="Delete">
+                                🗑️
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -225,7 +290,7 @@ fieldset {
 }
 
 :is(label, input) + :is(input, textarea) {
-    margin-bottom: 0.5em;
+    margin-bottom: 1rem;
 }
 
 table {
