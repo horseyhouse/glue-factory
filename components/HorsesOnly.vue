@@ -19,7 +19,6 @@ const channel = "The Glue Factory";
 
 const graffiti = useGraffiti();
 const session = useGraffitiSession();
-session.value.pods = ["https://pod.graffiti.garden", "http://localhost:3000"];
 
 const defaultTime = new Date();
 defaultTime.setMonth(defaultTime.getMonth() + 1);
@@ -272,6 +271,7 @@ fieldset {
 table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 td {

@@ -53,7 +53,6 @@ function clickAway(event: MouseEvent) {
         unselectFlyer();
     }
 }
-// Press escape to close the dialog
 window.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
         unselectFlyer();
