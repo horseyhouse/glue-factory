@@ -163,17 +163,17 @@ dialog {
 
     figure {
         width: 100%;
-        max-width: 40rem;
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
         align-items: center;
-        justify-items: center;
+        justify-content: center;
         gap: 1rem;
         padding: 1rem;
         margin: auto;
 
         img {
             width: 100%;
+            max-width: 30rem;
             height: auto;
             box-shadow: 0 0 0.7rem pink;
         }
