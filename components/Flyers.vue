@@ -31,8 +31,17 @@ function prettyDate(date: string) {
 }
 
 const selectedFlyer = ref<null | GraffitiObjectTyped<typeof flyerSchema>>(null);
+
+if (window.location.hash) {
+    graffiti.get(window.location.hash.slice(1)).then((flyer) => {
+        // TODO: get should return a typed object
+        selectedFlyer.value = flyer as GraffitiObjectTyped<typeof flyerSchema>;
+    });
+}
+
 function selectFlyer(flyer: GraffitiObjectTyped<typeof flyerSchema>) {
     selectedFlyer.value = flyer;
+    window.location.hash = graffiti.objectToUrl(flyer);
     nextTick(() => {
         const closeButton = document.getElementById("dialog-close");
         closeButton?.focus();
@@ -40,6 +49,7 @@ function selectFlyer(flyer: GraffitiObjectTyped<typeof flyerSchema>) {
 }
 function unselectFlyer() {
     if (selectedFlyer.value) {
+        window.location.hash = "";
         const originalButton = document.getElementById(
             `see-more-${graffiti.objectToUrl(selectedFlyer.value)}`,
         );
