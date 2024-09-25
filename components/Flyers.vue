@@ -83,7 +83,7 @@ window.addEventListener("keydown", (event) => {
         </li>
     </ul>
     <dialog v-if="selectedFlyer" open @click="clickAway">
-        <button @click="unselectFlyer" id="dialog-close">Close</button>
+        <button @click="unselectFlyer" id="dialog-close">close</button>
         <figure @click="clickAway">
             <img
                 :src="(selectedFlyer.value.attachment as any)[0].url"
@@ -94,7 +94,7 @@ window.addEventListener("keydown", (event) => {
                 <p v-html="selectedFlyer.value.content"></p>
             </figcaption>
         </figure>
-        <button @click="unselectFlyer" style="margin-top: auto">Close</button>
+        <button @click="unselectFlyer" style="margin-top: auto">close</button>
     </dialog>
 </template>
 
@@ -150,6 +150,8 @@ dialog {
         width: 100%;
         background: #111;
         color: inherit;
+        font: inherit;
+        font-size: 1.5rem;
         border: none;
         border: 1px solid #555;
         cursor: pointer;
