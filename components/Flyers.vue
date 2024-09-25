@@ -94,6 +94,7 @@ window.addEventListener("keydown", (event) => {
                 <p v-html="selectedFlyer.value.content"></p>
             </figcaption>
         </figure>
+        <button @click="unselectFlyer" style="margin-top: auto">Close</button>
     </dialog>
 </template>
 
@@ -134,21 +135,23 @@ dialog {
     overflow: auto;
     position: fixed;
     border: none;
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     top: 0;
     left: 0;
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(0.2rem);
     color: inherit;
+    display: flex;
+    flex-direction: column;
 
     button {
         width: 100%;
         background: #111;
         color: inherit;
         border: none;
-        border-bottom: 1px solid #555;
+        border: 1px solid #555;
         cursor: pointer;
         padding: 0.5rem;
     }
