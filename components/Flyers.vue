@@ -1,60 +1,44 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { computed } from "vue";
+import { useDiscover, useGraffitiSession } from "@graffiti-garden/client-vue";
+import { flyerSchema } from "./schemas";
 
-const paths = import.meta.glob("/media/flyers/*");
-
-function pathToDate(path: string): Date {
-    // Regex that extracts the filename from the path, without extension
-    const filename = path
-        .replace(/^.*[\\\/]/, "")
-        .split(".")
-        .slice(0, -1)
-        .join(".");
-
-    return new Date(filename);
-}
-
-const pathsAndDates = Object.keys(paths)
-    // Compute a date for each path
-    .map((path: string) => ({
-        path,
-        date: pathToDate(path),
-    }))
-    // Sort by the date
-    .sort((a, b) => b.date.getTime() - a.date.getTime());
-
-// Resolved paths
-const resolvedPaths = reactive(new Map<string, string>());
-pathsAndDates.forEach(({ path }) => {
-    paths[path]().then((module) => {
-        if (
-            module &&
-            typeof module === "object" &&
-            "default" in module &&
-            typeof module.default === "string"
-        ) {
-            resolvedPaths.set(path, module.default);
-        }
-    });
-});
+const session = useGraffitiSession();
+session.value.pods = ["https://pod.graffiti.garden"];
+const channel = "The Glue Factory";
+const { results: flyers, isPolling } = useDiscover([channel], flyerSchema);
+const flyersSorted = computed(() =>
+    flyers.value.sort(
+        (a, b) =>
+            new Date(b.value.startTime).getTime() -
+            new Date(a.value.startTime).getTime(),
+    ),
+);
 </script>
 
 <template>
+    <p v-if="isPolling">Loading...</p>
     <ul class="flyers">
-        <li v-for="{ path, date } of pathsAndDates">
+        <li v-for="flyer of flyersSorted">
             <figure>
                 <figcaption>
                     {{
-                        date.toLocaleString(undefined, {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                            timeZone: "UTC",
-                        })
+                        new Date(flyer.value.startTime).toLocaleString(
+                            undefined,
+                            {
+                                weekday: "long",
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                timeZone: "UTC",
+                            },
+                        )
                     }}
                 </figcaption>
-                <img :src="resolvedPaths.get(path)" />
+                <img
+                    :src="(flyer.value.attachment as any)[0].url"
+                    :alt="(flyer.value.attachment as any)[0].alt"
+                />
             </figure>
         </li>
     </ul>

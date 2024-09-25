@@ -10,50 +10,10 @@ import {
     type GraffitiLocalObjectTyped,
 } from "@graffiti-garden/client-vue";
 import "@graffiti-garden/client-vue/dist/style.css";
+import { flyerSchema } from "./schemas";
 
 const redirectUrl = window.location.toString();
-registerSolidSession({
-    whichPod: () => "http://localhost:3000",
-});
-
-const flyerSchema = {
-    properties: {
-        value: {
-            required: ["startTime", "content", "location", "attachment"],
-            properties: {
-                startTime: {
-                    type: "string",
-                },
-                content: {
-                    type: "string",
-                },
-                location: {
-                    type: "string",
-                },
-                attachment: {
-                    type: "array",
-                    minItems: 1,
-                    items: {
-                        type: "object",
-                        required: ["type", "url", "alt"],
-                        properties: {
-                            type: {
-                                type: "string",
-                                enum: ["Image"],
-                            },
-                            url: {
-                                type: "string",
-                            },
-                            alt: {
-                                type: "string",
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    },
-} as const;
+registerSolidSession();
 
 const channel = "The Glue Factory";
 
@@ -117,7 +77,7 @@ async function putFlyer() {
     } else {
         await graffiti.put<typeof flyerSchema>(object, session.value);
     }
-    startTime.value = "";
+    startTime.value = defaultTimeString;
     content.value = "";
     imageUrl.value = "";
     alt.value = "";
@@ -154,8 +114,8 @@ const { results: flyers } = useDiscover([channel], flyerSchema);
 const flyersSorted = computed(() =>
     flyers.value.sort(
         (a, b) =>
-            new Date(a.value.startTime).getTime() -
-            new Date(b.value.startTime).getTime(),
+            new Date(b.value.startTime).getTime() -
+            new Date(a.value.startTime).getTime(),
     ),
 );
 </script>
