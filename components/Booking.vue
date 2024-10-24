@@ -24,10 +24,16 @@
             All ticket sales go to bands at whatever "suggested donation" you
             set. Any donations or tips to the bar go to the house.
         </li>
-        <!--<li>
-            We currently do not have a backline or PA system, bands bring their
-            own. However we are planning on getting a PA ~soon~.
-        </li> -->
+        <li>
+            We have a full PA setup with 2 mains, 2 monitors, and a 16 channel
+            mixer with FX. We have 4 mics with stands, and 1 DI box. We do not
+            have a drum kit or amps.
+        </li>
+        <li>
+            We have a pair of Technic SL-1210MK2 turntables. If you want to use
+            them, please bring your own needles/cartridges. We do not currently
+            have a mixer or CDJs.
+        </li>
         <li>
             Let us know if you need connects to local acts to fill out the set.
         </li>
@@ -35,7 +41,15 @@
             Let us know if you will make a flyer or would like us to make one.
         </li>
         <li>Our capacity is 80.</li>
-        <li>Free water, earplugs, and narcan.</li>
+        <li>Free water, earplugs, masks, narcan, condoms. Stay safe horsie.</li>
+        <li>
+            In the unlikely event of a fire, we have 2 exits and 2 10lb ABC fire
+            extinguishers, inspected annually.
+        </li>
+        <li>
+            No smoking any substance inside. Vaping OK, but please be respectful
+            of ppl around you.
+        </li>
         <li>Not wheelchair accessible at this time, sorry! :(</li>
     </ul>
 </template>
