@@ -30,9 +30,10 @@
             have a drum kit or amps.
         </li>
         <li>
-            We have a pair of Technic SL-1210MK2 turntables. If you want to use
-            them, please bring your own needles/cartridges. We do not currently
-            have a mixer or CDJs.
+            For DJ sets, we have a pair of Technic SL-1210MK2 turntables and a
+            Xone:96 mixer. If you want to use the TTs, please bring your own
+            needles/cartridges. We do not currently have CDJs. Please treat the
+            equipment with nicely, no drinks nearby.
         </li>
         <li>
             Let us know if you need connects to local acts to fill out the set.
