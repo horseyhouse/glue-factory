@@ -1,10 +1,12 @@
+import type { GraffitiObject, JSONSchema } from "@graffiti-garden/api";
+
 export const flyerSchema = {
   properties: {
     value: {
       required: ["startTime", "content", "location", "attachment"],
       properties: {
         startTime: {
-          type: "string",
+          type: "number",
         },
         content: {
           type: "string",
@@ -35,4 +37,6 @@ export const flyerSchema = {
       },
     },
   },
-} as const;
+} as const satisfies JSONSchema;
+
+export type Flyer = GraffitiObject<typeof flyerSchema>;

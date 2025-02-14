@@ -2,24 +2,19 @@
 import { ref, computed } from "vue";
 import {
     useGraffiti,
-    useDiscover,
+    useGraffitiDiscover,
     useGraffitiSession,
-    registerSolidSession,
-    GraffitiIdentityProviderLogin,
-    type GraffitiObjectTyped,
-    type GraffitiLocalObjectTyped,
-} from "@graffiti-garden/client-vue";
-import "@graffiti-garden/client-vue/dist/style.css";
+} from "@graffiti-garden/wrapper-vue";
+import type { GraffitiObject, GraffitiPutObject } from "@graffiti-garden/api";
 import { flyerSchema } from "./schemas";
-
-const redirectUrl = window.location.toString();
-registerSolidSession();
 
 const channel = "The Glue Factory";
 
 const graffiti = useGraffiti();
 const session = useGraffitiSession();
 
+// The default time is a month in the future
+// at 6pm on the next Saturday
 const defaultTime = new Date();
 defaultTime.setMonth(defaultTime.getMonth() + 1);
 defaultTime.setDate(defaultTime.getDate() + (6 - defaultTime.getDay()));
@@ -28,15 +23,16 @@ defaultTime.setMinutes(
     defaultTime.getMinutes() - defaultTime.getTimezoneOffset(),
 );
 const defaultTimeString = defaultTime.toISOString().slice(0, 16);
-const startTime = ref<string>(defaultTimeString);
+
+const startTimeString = ref(defaultTimeString);
 const content = ref("");
 const alt = ref("");
 const imageUrl = ref("");
 async function putFlyer() {
-    if (!session.value.webId) {
+    if (!session.value) {
         return alert("You must be logged in horsie");
     }
-    if (!startTime.value) {
+    if (!startTimeString.value) {
         return alert("Please provide a start time horsie");
     }
     if (!content.value) {
@@ -53,7 +49,7 @@ async function putFlyer() {
 
     const object = {
         value: {
-            startTime: startTime.value,
+            startTime: new Date(startTimeString.value).getTime(),
             content: content.value,
             location: "ask a horse",
             attachment: [
@@ -65,26 +61,28 @@ async function putFlyer() {
             ],
         },
         channels: [channel],
-    } satisfies GraffitiLocalObjectTyped<typeof flyerSchema>;
+    } satisfies GraffitiPutObject<typeof flyerSchema>;
 
     if (editingUrl.value) {
         await graffiti.put<typeof flyerSchema>(
-            object,
-            editingUrl.value,
+            {
+                ...graffiti.uriToLocation(editingUrl.value),
+                ...object,
+            },
             session.value,
         );
     } else {
         await graffiti.put<typeof flyerSchema>(object, session.value);
     }
-    startTime.value = defaultTimeString;
+    startTimeString.value = defaultTimeString;
     content.value = "";
     imageUrl.value = "";
     alt.value = "";
     editingUrl.value = null;
 }
 
-function deleteFlyer(flyer: GraffitiObjectTyped<typeof flyerSchema>) {
-    if (!session.value.webId) {
+function deleteFlyer(flyer: GraffitiObject<typeof flyerSchema>) {
+    if (!session.value) {
         return alert("You must be logged in horsie");
     }
     if (
@@ -98,18 +96,18 @@ function deleteFlyer(flyer: GraffitiObjectTyped<typeof flyerSchema>) {
 }
 
 const editingUrl = ref<string | null>(null);
-function startEditingFlyer(flyer: GraffitiObjectTyped<typeof flyerSchema>) {
-    startTime.value = flyer.value.startTime;
+function startEditingFlyer(flyer: GraffitiObject<typeof flyerSchema>) {
+    startTimeString.value = new Date(flyer.value.startTime).toLocaleString();
     content.value = flyer.value.content;
     imageUrl.value = (flyer.value.attachment as any)[0].url;
     alt.value = (flyer.value.attachment as any)[0].alt;
-    editingUrl.value = graffiti.objectToUrl(flyer);
+    editingUrl.value = graffiti.objectToUri(flyer);
     document.getElementById("flyer-editor-form")?.scrollIntoView({
         behavior: "smooth",
     });
 }
 
-const { results: flyers } = useDiscover([channel], flyerSchema);
+const { results: flyers } = useGraffitiDiscover([channel], flyerSchema);
 const flyersSorted = computed(() =>
     flyers.value.sort(
         (a, b) =>
@@ -122,12 +120,15 @@ const flyersSorted = computed(() =>
 <template>
     <div class="admin">
         <h1>⚠️🐴 Real Horsie Area 🐴⚠️</h1>
-        <GraffitiIdentityProviderLogin
-            client-name="glue factory"
-            :redirect-url="redirectUrl"
-        />
 
-        <template v-if="session.webId">
+        <button v-if="!$graffitiSession.value" @click="$graffiti.login()">
+            Log In
+        </button>
+        <button v-else @click="$graffiti.logout($graffitiSession.value)">
+            Log Out
+        </button>
+
+        <template v-if="$graffitiSession.value">
             <form @submit.prevent="putFlyer" id="flyer-editor-form">
                 <fieldset>
                     <legend>Flyer Editor</legend>
@@ -149,7 +150,7 @@ const flyersSorted = computed(() =>
                     <input
                         type="datetime-local"
                         id="start-time"
-                        v-model="startTime"
+                        v-model="startTimeString"
                     />
                     <label for="content">Content</label>
                     <textarea
@@ -192,7 +193,7 @@ const flyersSorted = computed(() =>
                 <tbody>
                     <tr
                         v-for="flyer in flyersSorted"
-                        :key="graffiti.objectToUrl(flyer)"
+                        :key="graffiti.objectToUri(flyer)"
                     >
                         <td scope="row">
                             <img
@@ -211,7 +212,7 @@ const flyersSorted = computed(() =>
                             <ul>
                                 <li>
                                     <a
-                                        :href="graffiti.objectToUrl(flyer)"
+                                        :href="graffiti.objectToUri(flyer)"
                                         title="View"
                                         >🔗</a
                                     >

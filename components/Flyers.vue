@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import { computed, ref, nextTick, useTemplateRef } from "vue";
+import { computed, ref, nextTick, watch } from "vue";
 import {
-    useDiscover,
+    useGraffitiDiscover,
     useGraffiti,
-    useGraffitiSession,
-    type GraffitiObjectTyped,
-} from "@graffiti-garden/client-vue";
-import { flyerSchema } from "./schemas";
+    useGraffitiGet,
+} from "@graffiti-garden/wrapper-vue";
+import { flyerSchema, type Flyer } from "./schemas";
 
 const graffiti = useGraffiti();
-const session = useGraffitiSession();
-session.value.pods = ["https://pod.graffiti.garden"];
+
 const channel = "The Glue Factory";
-const { results: flyers, isPolling } = useDiscover([channel], flyerSchema);
-const flyersSorted = computed(() =>
-    flyers.value.sort(
-        (a, b) =>
-            new Date(b.value.startTime).getTime() -
-            new Date(a.value.startTime).getTime(),
-    ),
+const { results: flyers, isPolling } = useGraffitiDiscover(
+    [channel],
+    flyerSchema,
 );
 
-function prettyDate(date: string) {
+const flyersSorted = computed(() =>
+    flyers.value.sort((a, b) => b.value.startTime - a.value.startTime),
+);
+
+function prettyDate(date: number) {
     return new Date(date).toLocaleString(undefined, {
         weekday: "long",
         year: "numeric",
@@ -30,18 +28,17 @@ function prettyDate(date: string) {
     });
 }
 
-const selectedFlyer = ref<null | GraffitiObjectTyped<typeof flyerSchema>>(null);
+const selectedFlyer = ref<null | Flyer>(null);
 
-if (window.location.hash) {
-    graffiti.get(window.location.hash.slice(1)).then((flyer) => {
-        // TODO: get should return a typed object
-        selectedFlyer.value = flyer as GraffitiObjectTyped<typeof flyerSchema>;
-    });
+const hash = window.location.hash.slice(1);
+if (hash.length) {
+    const { result: hashFlyer } = useGraffitiGet(hash, flyerSchema);
+    watch(hashFlyer, (flyer) => flyer && (selectedFlyer.value = flyer));
 }
 
-function selectFlyer(flyer: GraffitiObjectTyped<typeof flyerSchema>) {
+function selectFlyer(flyer: Flyer) {
     selectedFlyer.value = flyer;
-    window.location.hash = graffiti.objectToUrl(flyer);
+    window.location.hash = graffiti.objectToUri(flyer);
     nextTick(() => {
         const closeButton = document.getElementById("dialog-close");
         closeButton?.focus();
@@ -51,7 +48,7 @@ function unselectFlyer() {
     if (selectedFlyer.value) {
         window.location.hash = "";
         const originalButton = document.getElementById(
-            `see-more-${graffiti.objectToUrl(selectedFlyer.value)}`,
+            `see-more-${graffiti.objectToUri(selectedFlyer.value)}`,
         );
         selectedFlyer.value = null;
         originalButton?.focus();
@@ -75,7 +72,7 @@ window.addEventListener("keydown", (event) => {
         <li v-for="flyer of flyersSorted">
             <button
                 @click="selectFlyer(flyer)"
-                :id="`see-more-${graffiti.objectToUrl(flyer)}`"
+                :id="`see-more-${graffiti.objectToUri(flyer)}`"
                 aria-label="read more"
             >
                 <figure>
@@ -83,8 +80,8 @@ window.addEventListener("keydown", (event) => {
                         {{ prettyDate(flyer.value.startTime) }}
                     </figcaption>
                     <img
-                        :src="(flyer.value.attachment as any)[0].url"
-                        :alt="(flyer.value.attachment as any)[0].alt"
+                        :src="flyer.value.attachment[0].url"
+                        :alt="flyer.value.attachment[0].alt"
                     />
                 </figure>
             </button>
@@ -94,8 +91,8 @@ window.addEventListener("keydown", (event) => {
         <button @click="unselectFlyer" id="dialog-close">close</button>
         <figure @click="clickAway">
             <img
-                :src="(selectedFlyer.value.attachment as any)[0].url"
-                :alt="(selectedFlyer.value.attachment as any)[0].alt"
+                :src="selectedFlyer.value.attachment[0].url"
+                :alt="selectedFlyer.value.attachment[0].alt"
             />
             <figcaption>
                 <h2>{{ prettyDate(selectedFlyer.value.startTime) }}</h2>

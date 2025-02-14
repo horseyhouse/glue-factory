@@ -2,9 +2,7 @@
   "name": "glue-factory",
   "version": "1.0.0",
   "description": "The Glue Factory",
-  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
@@ -20,6 +18,7 @@
   },
   "homepage": "https://github.com/horseyhouse/glue-factory#readme",
   "devDependencies": {
+    "@graffiti-garden/api": "^0.4.1",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vue/language-server": "^2.1.6",
     "@vue/typescript-plugin": "^2.1.6",
@@ -28,7 +27,9 @@
     "vite": "^5.4.7"
   },
   "dependencies": {
-    "@graffiti-garden/client-vue": "^0.1.5",
+    "@graffiti-garden/implementation-federated": "^0.0.3",
+    "@graffiti-garden/implementation-local": "^0.4.0",
+    "@graffiti-garden/wrapper-vue": "^0.3.0",
     "vue": "^3.5.7",
     "vue-router": "^4.4.5"
   }
