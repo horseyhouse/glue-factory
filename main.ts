@@ -6,7 +6,7 @@ import Flyers from "./components/Flyers.vue";
 import Booking from "./components/Booking.vue";
 import HorsesOnly from "./components/HorsesOnly.vue";
 import { GraffitiPlugin } from "@graffiti-garden/wrapper-vue";
-import { GraffitiLocal } from "@graffiti-garden/implementation-local";
+import { GraffitiRemote } from "@graffiti-garden/implementation-remote";
 
 const redirect = sessionStorage.redirect;
 delete sessionStorage.redirect;
@@ -27,6 +27,6 @@ const router = createRouter({
 createApp(App)
   .use(router)
   .use(GraffitiPlugin, {
-    graffiti: new GraffitiLocal(),
+    graffiti: new GraffitiRemote(),
   })
   .mount("#app");

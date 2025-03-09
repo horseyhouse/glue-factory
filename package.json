@@ -27,10 +27,9 @@
     "vite": "^5.4.7"
   },
   "dependencies": {
-    "@graffiti-garden/implementation-federated": "^0.0.3",
-    "@graffiti-garden/implementation-local": "^0.4.0",
-    "@graffiti-garden/wrapper-vue": "^0.3.0",
-    "vue": "^3.5.7",
-    "vue-router": "^4.4.5"
+    "@graffiti-garden/implementation-remote": "^0.1.1",
+    "@graffiti-garden/wrapper-vue": "^0.3.2",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
   }
 }

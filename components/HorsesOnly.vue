@@ -124,9 +124,12 @@ const flyersSorted = computed(() =>
         <button v-if="!$graffitiSession.value" @click="$graffiti.login()">
             Log In
         </button>
-        <button v-else @click="$graffiti.logout($graffitiSession.value)">
-            Log Out
-        </button>
+        <template v-else>
+            <p>Welcome, {{ $graffitiSession.value.actor }}!</p>
+            <button @click="$graffiti.logout($graffitiSession.value)">
+                Log Out
+            </button>
+        </template>
 
         <template v-if="$graffitiSession.value">
             <form @submit.prevent="putFlyer" id="flyer-editor-form">
