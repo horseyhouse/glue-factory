@@ -6,7 +6,7 @@ import {
     useGraffitiSession,
 } from "@graffiti-garden/wrapper-vue";
 import type { GraffitiObject, GraffitiPutObject } from "@graffiti-garden/api";
-import { flyerSchema } from "./schemas";
+import { pointHorsies, flyerSchema } from "./schemas";
 
 const channel = "The Glue Factory";
 
@@ -31,6 +31,11 @@ const imageUrl = ref("");
 async function putFlyer() {
     if (!session.value) {
         return alert("You must be logged in horsie");
+    }
+    if (!pointHorsies.has(session.value.actor)) {
+        return alert(
+            "You must be a registered point horsie to post a flyer. Ask Theia to be added",
+        );
     }
     if (!startTimeString.value) {
         return alert("Please provide a start time horsie");
@@ -66,7 +71,7 @@ async function putFlyer() {
     if (editingUrl.value) {
         await graffiti.put<typeof flyerSchema>(
             {
-                ...graffiti.uriToLocation(editingUrl.value),
+                url: editingUrl.value,
                 ...object,
             },
             session.value,
@@ -97,11 +102,13 @@ function deleteFlyer(flyer: GraffitiObject<typeof flyerSchema>) {
 
 const editingUrl = ref<string | null>(null);
 function startEditingFlyer(flyer: GraffitiObject<typeof flyerSchema>) {
-    startTimeString.value = new Date(flyer.value.startTime).toLocaleString();
+    startTimeString.value = new Date(flyer.value.startTime)
+        .toISOString()
+        .slice(0, 16);
     content.value = flyer.value.content;
     imageUrl.value = (flyer.value.attachment as any)[0].url;
     alt.value = (flyer.value.attachment as any)[0].alt;
-    editingUrl.value = graffiti.objectToUri(flyer);
+    editingUrl.value = flyer.url;
     document.getElementById("flyer-editor-form")?.scrollIntoView({
         behavior: "smooth",
     });
@@ -125,14 +132,24 @@ const flyersSorted = computed(() =>
             Log In
         </button>
         <template v-else>
-            <p>Welcome, {{ $graffitiSession.value.actor }}!</p>
+            <p>
+                Welcome,
+                {{
+                    pointHorsies.get($graffitiSession.value.actor) ??
+                    $graffitiSession.value.actor
+                }}
+            </p>
             <button @click="$graffiti.logout($graffitiSession.value)">
                 Log Out
             </button>
         </template>
 
         <template v-if="$graffitiSession.value">
-            <form @submit.prevent="putFlyer" id="flyer-editor-form">
+            <p v-if="!pointHorsies.has($graffitiSession.value.actor)">
+                You are not a registered point horsie so you can't post stuff.
+                Ask Theia to be added
+            </p>
+            <form v-else @submit.prevent="putFlyer" id="flyer-editor-form">
                 <fieldset>
                     <legend>Flyer Editor</legend>
 
@@ -190,14 +207,12 @@ const flyersSorted = computed(() =>
                         <th scope="col" class="start-time-col">Start Time</th>
                         <th scope="col" class="content-col">Content</th>
                         <th scope="col" class="alt-col">Alt Text</th>
+                        <th scope="col" class="point-horsie">Point Horsie</th>
                         <th scope="col" class="controls-col">Controls</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr
-                        v-for="flyer in flyersSorted"
-                        :key="graffiti.objectToUri(flyer)"
-                    >
+                    <tr v-for="flyer in flyersSorted" :key="flyer.url">
                         <td scope="row">
                             <img
                                 :src="(flyer.value.attachment as any)[0].url"
@@ -212,14 +227,18 @@ const flyersSorted = computed(() =>
                         <td v-html="flyer.value.content"></td>
                         <td>{{ (flyer.value.attachment as any)[0].alt }}</td>
                         <td>
-                            <ul>
-                                <li>
-                                    <a
-                                        :href="graffiti.objectToUri(flyer)"
-                                        title="View"
-                                        >🔗</a
-                                    >
-                                </li>
+                            {{ pointHorsies.get(flyer.actor) }}
+                        </td>
+                        <td>
+                            <ul
+                                v-if="
+                                    $graffitiSession.value?.actor ===
+                                    flyer.actor
+                                "
+                            >
+                                <!-- <li>
+                                    <a :href="flyer.url" title="View">🔗</a>
+                                </li> -->
                                 <li>
                                     <button
                                         @click="startEditingFlyer(flyer)"
@@ -303,7 +322,10 @@ tr:nth-child(even) {
     width: 30%;
 }
 .alt-col {
-    width: 30%;
+    width: 20%;
+}
+.point-horsie {
+    width: 10%;
 }
 
 td ul {

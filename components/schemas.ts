@@ -1,7 +1,15 @@
 import type { GraffitiObject, JSONSchema } from "@graffiti-garden/api";
 
+export const pointHorsies = new Map<string, string>([
+  ["theia", "Theia"],
+  ["https://solid.theias.place/profile/card#me", "Theia"],
+]);
+
 export const flyerSchema = {
   properties: {
+    actor: {
+      enum: Array.from(pointHorsies.keys()),
+    },
     value: {
       required: ["startTime", "content", "location", "attachment"],
       properties: {

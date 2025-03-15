@@ -38,7 +38,7 @@ if (hash.length) {
 
 function selectFlyer(flyer: Flyer) {
     selectedFlyer.value = flyer;
-    window.location.hash = graffiti.objectToUri(flyer);
+    window.location.hash = flyer.url;
     nextTick(() => {
         const closeButton = document.getElementById("dialog-close");
         closeButton?.focus();
@@ -48,7 +48,7 @@ function unselectFlyer() {
     if (selectedFlyer.value) {
         window.location.hash = "";
         const originalButton = document.getElementById(
-            `see-more-${graffiti.objectToUri(selectedFlyer.value)}`,
+            `see-more-${selectedFlyer.value.url}`,
         );
         selectedFlyer.value = null;
         originalButton?.focus();
@@ -67,12 +67,12 @@ window.addEventListener("keydown", (event) => {
 </script>
 
 <template>
-    <p v-if="isPolling">Loading...</p>
+    <p v-if="isPolling || $graffitiSession.value === undefined">Loading...</p>
     <ul class="flyers">
         <li v-for="flyer of flyersSorted">
             <button
                 @click="selectFlyer(flyer)"
-                :id="`see-more-${graffiti.objectToUri(flyer)}`"
+                :id="`see-more-${flyer.url}`"
                 aria-label="read more"
             >
                 <figure>
