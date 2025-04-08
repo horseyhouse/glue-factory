@@ -22,6 +22,9 @@ export const flyerSchema = {
         location: {
           type: "string",
         },
+        published: {
+          type: "number",
+        },
         attachment: {
           type: "array",
           minItems: 1,

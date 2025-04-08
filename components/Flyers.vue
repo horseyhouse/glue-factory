@@ -6,11 +6,10 @@ import {
     useGraffitiGet,
 } from "@graffiti-garden/wrapper-vue";
 import { flyerSchema, type Flyer } from "./schemas";
-
-const graffiti = useGraffiti();
+import Replies from "./Replies.vue";
 
 const channel = "The Glue Factory";
-const { results: flyers, isPolling } = useGraffitiDiscover(
+const { objects: flyers, isInitialPolling } = useGraffitiDiscover(
     [channel],
     flyerSchema,
 );
@@ -32,7 +31,7 @@ const selectedFlyer = ref<null | Flyer>(null);
 
 const hash = window.location.hash.slice(1);
 if (hash.length) {
-    const { result: hashFlyer } = useGraffitiGet(hash, flyerSchema);
+    const { object: hashFlyer } = useGraffitiGet(hash, flyerSchema);
     watch(hashFlyer, (flyer) => flyer && (selectedFlyer.value = flyer));
 }
 
@@ -67,7 +66,9 @@ window.addEventListener("keydown", (event) => {
 </script>
 
 <template>
-    <p v-if="isPolling || $graffitiSession.value === undefined">Loading...</p>
+    <p v-if="isInitialPolling || $graffitiSession.value === undefined">
+        Loading...
+    </p>
     <ul class="flyers">
         <li v-for="flyer of flyersSorted">
             <button
@@ -99,6 +100,7 @@ window.addEventListener("keydown", (event) => {
                 <p v-html="selectedFlyer.value.content"></p>
             </figcaption>
         </figure>
+        <Replies :inReplyTo="selectedFlyer.url" :replyBoxOpen="true" />
         <button @click="unselectFlyer" style="margin-top: auto">close</button>
     </dialog>
 </template>

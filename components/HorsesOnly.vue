@@ -114,7 +114,7 @@ function startEditingFlyer(flyer: GraffitiObject<typeof flyerSchema>) {
     });
 }
 
-const { results: flyers } = useGraffitiDiscover([channel], flyerSchema);
+const { objects: flyers } = useGraffitiDiscover([channel], flyerSchema);
 const flyersSorted = computed(() =>
     flyers.value.sort(
         (a, b) =>
@@ -289,6 +289,11 @@ fieldset {
 
 :is(label, input) + :is(input:not([type="submit"]), textarea) {
     margin-bottom: 1rem;
+}
+
+input[type="submit"]:hover {
+    background-color: #555;
+    cursor: pointer;
 }
 
 table {
