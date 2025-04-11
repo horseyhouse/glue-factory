@@ -97,7 +97,11 @@ window.addEventListener("keydown", (event) => {
             />
             <figcaption>
                 <h2>{{ prettyDate(selectedFlyer.value.startTime) }}</h2>
-                <p v-html="selectedFlyer.value.content"></p>
+                <!-- <p v-html="selectedFlyer.value.content"></p> -->
+                <p>
+                    Event description redacted while the Graffiti paper is under
+                    review!
+                </p>
             </figcaption>
         </figure>
         <Replies :inReplyTo="selectedFlyer.url" :replyBoxOpen="true" />

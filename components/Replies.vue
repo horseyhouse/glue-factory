@@ -118,22 +118,18 @@ async function deleteReply(reply: ReplyObject, session: GraffitiSession) {
         >
             <textarea
                 v-model="reply"
-                placeholder="Write a comment..."
+                placeholder="Write a reply..."
                 rows="3"
                 required
             ></textarea>
             <label>
                 Crosspost to
-                <a href="https://namebook.graffiti.garden/">namebook</a>?
+                <a href="https://glitter.graffiti.garden/">glitter</a>?
                 <input type="checkbox" v-model="crosspost" />
             </label>
             <input
                 type="submit"
-                :value="
-                    replying
-                        ? 'Replying...'
-                        : `Reply as ${$graffitiSession.value.actor}`
-                "
+                :value="replying ? 'Replying...' : `Reply as [REDACTED]`"
                 :disabled="replying || !reply"
             />
             <!-- <button @click.prevent="$graffiti.logout($graffitiSession.value)">
@@ -154,7 +150,8 @@ async function deleteReply(reply: ReplyObject, session: GraffitiSession) {
                 <article>
                     <header>
                         <h3>
-                            {{ reply.actor }}
+                            [REDACTED]
+                            <!-- {{ reply.actor }} -->
                         </h3>
                         <time
                             :datetime="
@@ -173,7 +170,15 @@ async function deleteReply(reply: ReplyObject, session: GraffitiSession) {
                         </time>
                     </header>
                     <main>
-                        <p>
+                        <p
+                            v-if="
+                                reply.actor !== $graffitiSession?.value?.actor
+                            "
+                        >
+                            Replies redacted while the Graffiti paper is in
+                            review.
+                        </p>
+                        <p v-else>
                             {{ reply.value.content }}
                         </p>
                     </main>
@@ -237,6 +242,10 @@ section {
     background: #111;
     margin-bottom: 1rem;
 
+    article + section:has(ul li) {
+        margin-top: 1rem;
+    }
+
     form {
         display: flex;
         flex-direction: column;
@@ -276,8 +285,9 @@ section {
 
             h3 {
                 margin: 0;
-                font-size: 1.5rem;
+                font-size: 1rem;
                 color: #ccc;
+                text-align: left;
             }
 
             time {
@@ -310,7 +320,8 @@ section {
 
                         button {
                             border: 1px solid #555;
-                            font-size: 1rem;
+                            font-size: 0.8rem;
+                            padding: 0.5rem;
                             color: #ccc;
                         }
                     }

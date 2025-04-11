@@ -1,11 +1,11 @@
 <template>
     <ul class="booking">
         <li>
-            The Glue Factory is a DIY venue in Somerville, MA. We host punk,
-            indie, raves, drag, or whatever we feel like. Respect the space.
+            The Glue Factory is a DIY venue in [REDACTED]. We host punk, indie,
+            raves, drag, or whatever we feel like. Respect the space.
         </li>
         <li>
-            Somerville is a dense residential area and you and your invitees
+            [REDACTED] is a dense residential area and you and your invitees
             must be respectful of our neighbors. We only book shows on weekends
             and shows must end promptly at 10pm.
         </li>
