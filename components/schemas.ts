@@ -1,9 +1,7 @@
 import type { GraffitiObject, JSONSchema } from "@graffiti-garden/api";
+import { pointHorsies } from "./reviewers-do-not-open";
 
-export const pointHorsies = new Map<string, string>([
-  ["theia", "Theia"],
-  ["https://solid.theias.place/profile/card#me", "Theia"],
-]);
+export { pointHorsies };
 
 export const flyerSchema = {
   properties: {

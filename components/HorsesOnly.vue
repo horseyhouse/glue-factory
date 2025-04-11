@@ -147,7 +147,7 @@ const flyersSorted = computed(() =>
         <template v-if="$graffitiSession.value">
             <p v-if="!pointHorsies.has($graffitiSession.value.actor)">
                 You are not a registered point horsie so you can't post stuff.
-                Ask Theia to be added
+                Ask [REDACTED] to be added
             </p>
             <form v-else @submit.prevent="putFlyer" id="flyer-editor-form">
                 <fieldset>
@@ -224,10 +224,15 @@ const flyersSorted = computed(() =>
                                 new Date(flyer.value.startTime).toLocaleString()
                             }}
                         </td>
-                        <td v-html="flyer.value.content"></td>
-                        <td>{{ (flyer.value.attachment as any)[0].alt }}</td>
+                        <!-- <td v-html="flyer.value.content"></td> -->
+                        <td>REDACTED for review</td>
                         <td>
-                            {{ pointHorsies.get(flyer.actor) }}
+                            REDACTED for review
+                            <!-- {{ (flyer.value.attachment as any)[0].alt }} -->
+                        </td>
+                        <td>
+                            REDACTED
+                            <!-- {{ pointHorsies.get(flyer.actor) }} -->
                         </td>
                         <td>
                             <ul
