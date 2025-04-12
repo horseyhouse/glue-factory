@@ -34,7 +34,7 @@ async function putFlyer() {
     }
     if (!pointHorsies.has(session.value.actor)) {
         return alert(
-            "You must be a registered point horsie to post a flyer. Ask Theia to be added",
+            "You must be a registered point horsie to post a flyer. Ask [REDACTED] to be added",
         );
     }
     if (!startTimeString.value) {
