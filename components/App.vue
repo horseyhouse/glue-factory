@@ -1,7 +1,8 @@
 <template>
     <header>
         <h1>The Glue Factory</h1>
-        <h2>ask a horse</h2>
+        <h2>Somerville, MA</h2>
+        <h3>ask a horse</h3>
     </header>
     <nav>
         <ul>
@@ -51,10 +52,5 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-/* TODO: just for review */
-img {
-    filter: blur(0.5rem);
 }
 </style>

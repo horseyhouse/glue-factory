@@ -224,15 +224,12 @@ const flyersSorted = computed(() =>
                                 new Date(flyer.value.startTime).toLocaleString()
                             }}
                         </td>
-                        <!-- <td v-html="flyer.value.content"></td> -->
-                        <td>REDACTED for review</td>
+                        <td v-html="flyer.value.content"></td>
                         <td>
-                            REDACTED for review
-                            <!-- {{ (flyer.value.attachment as any)[0].alt }} -->
+                            {{ (flyer.value.attachment as any)[0].alt }}
                         </td>
                         <td>
-                            REDACTED
-                            <!-- {{ pointHorsies.get(flyer.actor) }} -->
+                            {{ pointHorsies.get(flyer.actor) }}
                         </td>
                         <td>
                             <ul

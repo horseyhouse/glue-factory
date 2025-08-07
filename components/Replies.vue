@@ -129,7 +129,7 @@ async function deleteReply(reply: ReplyObject, session: GraffitiSession) {
             </label>
             <input
                 type="submit"
-                :value="replying ? 'Replying...' : `Reply as [REDACTED]`"
+                :value="replying ? 'Replying...' : `Reply`"
                 :disabled="replying || !reply"
             />
             <!-- <button @click.prevent="$graffiti.logout($graffitiSession.value)">
@@ -149,11 +149,12 @@ async function deleteReply(reply: ReplyObject, session: GraffitiSession) {
             >
                 <article>
                     <header>
-                        <h3>
-                            [REDACTED]
+                        <h3 v-if="!inReplyTo">
+                            Theia
                             <!-- {{ reply.actor }} -->
                         </h3>
-                        <time
+                        <h3 v-else>Moog</h3>
+                        <!-- <time
                             :datetime="
                                 new Date(reply.value.published).toISOString()
                             "
@@ -167,18 +168,10 @@ async function deleteReply(reply: ReplyObject, session: GraffitiSession) {
                                     },
                                 )
                             }}
-                        </time>
+                        </time> -->
                     </header>
                     <main>
-                        <p
-                            v-if="
-                                reply.actor !== $graffitiSession?.value?.actor
-                            "
-                        >
-                            Replies redacted while the Graffiti paper is in
-                            review.
-                        </p>
-                        <p v-else>
+                        <p>
                             {{ reply.value.content }}
                         </p>
                     </main>
@@ -271,10 +264,14 @@ section {
         gap: 1rem;
     }
 
+    textarea {
+        height: 2rem;
+    }
+
     li {
         display: flex;
         flex-direction: column;
-        padding: 1rem;
+        padding: 0.5rem;
         border-bottom: 1px solid #555;
 
         header {
@@ -302,7 +299,9 @@ section {
             align-items: flex-start;
 
             p {
+                font-size: 1.2rem;
                 color: inherit;
+                text-align: right;
             }
         }
 
@@ -319,10 +318,12 @@ section {
                         padding: 0;
 
                         button {
-                            border: 1px solid #555;
+                            /* border: 1px solid #555; */
                             font-size: 0.8rem;
-                            padding: 0.5rem;
+                            /* padding: 0.5rem; */
                             color: #ccc;
+                            padding: 0;
+                            border: 0;
                         }
                     }
                 }
