@@ -150,10 +150,8 @@ async function deleteReply(reply: ReplyObject, session: GraffitiSession) {
                 <article>
                     <header>
                         <h3 v-if="!inReplyTo">
-                            Theia
-                            <!-- {{ reply.actor }} -->
+                            {{ reply.actor }}
                         </h3>
-                        <h3 v-else>Moog</h3>
                         <!-- <time
                             :datetime="
                                 new Date(reply.value.published).toISOString()
