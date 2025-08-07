@@ -46,6 +46,8 @@ const removeSchema = () =>
 const { objects: repliesAll } = useGraffitiDiscover(
     () => [props.inReplyTo],
     () => replySchema(),
+    undefined,
+    true,
 );
 
 const { objects: deletes } = useGraffitiDiscover(
@@ -149,7 +151,7 @@ async function deleteReply(reply: ReplyObject, session: GraffitiSession) {
             >
                 <article>
                     <header>
-                        <h3 v-if="!inReplyTo">
+                        <h3>
                             {{ reply.actor }}
                         </h3>
                         <!-- <time
