@@ -69,7 +69,7 @@ const replies = () => {
 
 const replying = ref(false);
 const reply = ref("");
-const crosspost = ref(false);
+const crosspost = ref(true);
 async function submitReply(session: GraffitiSession) {
     replying.value = true;
 
@@ -124,11 +124,11 @@ async function deleteReply(reply: ReplyObject, session: GraffitiSession) {
                 rows="3"
                 required
             ></textarea>
-            <label>
+            <!-- <label>
                 Crosspost to
                 <a href="https://glitter.graffiti.garden/">glitter</a>?
                 <input type="checkbox" v-model="crosspost" />
-            </label>
+            </label> -->
             <input
                 type="submit"
                 :value="replying ? 'Replying...' : `Reply`"
